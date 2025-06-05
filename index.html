@@ -1,375 +1,280 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa Mental - Presupuesto Maestro</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mapa Mental - Presupuesto Maestro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
-        .mind-map {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    .mind-map {
+      position: relative;
+      width: 1400px;
+      height: 1000px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .central-node {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            z-index: 10;
-        }
+    .svg-lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
 
-        .central-node:hover {
-            transform: scale(1.1);
-        }
+    .header {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
 
-        .branch {
-            position: absolute;
-            display: flex;
-            align-items: center;
-        }
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      margin-bottom: 15px;
+    }
 
-        .branch-line {
-            height: 3px;
-            background: #2c3e50;
-            position: relative;
-        }
+    .author {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+      background-size: 300% 300%;
+      animation: gradientShift 3s ease infinite;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 15px 30px;
+      border-radius: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      border: 4px solid rgba(255,255,255,0.4);
+    }
 
-        .node {
-            background: white;
-            border-radius: 15px;
-            padding: 15px 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            max-width: 200px;
-            text-align: center;
-        }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        .node:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
+    .central-node {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      z-index: 10;
+      border: 5px solid white;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
 
-        .node h3 {
-            color: #2c3e50;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
+    .main-node {
+      position: absolute;
+      background: white;
+      border-radius: 20px;
+      padding: 20px 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      font-size: 14px;
+      z-index: 5;
+      border: 3px solid rgba(255,255,255,0.3);
+      width: 200px;
+    }
 
-        .node p {
-            color: #7f8c8d;
-            font-size: 11px;
-            line-height: 1.3;
-        }
+    .sub-node {
+      position: absolute;
+      background: rgba(255,255,255,0.95);
+      border-radius: 15px;
+      padding: 12px 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      text-align: center;
+      font-size: 12px;
+      color: #2c3e50;
+      font-weight: 600;
+      z-index: 3;
+      border: 2px solid rgba(0,0,0,0.1);
+      width: 140px;
+    }
 
-        /* Posicionamiento de ramas */
-        .branch-1 {
-            top: 20%;
-            left: 60%;
-            transform: rotate(-30deg);
-        }
+    /* Posiciones de los nodos principales */
+    .main-1 { top: 120px; left: 600px; background: linear-gradient(45deg, #ff7675, #fd79a8); }
+    .main-2 { top: 200px; right: 150px; background: linear-gradient(45deg, #74b9ff, #0984e3); }
+    .main-3 { bottom: 200px; right: 150px; background: linear-gradient(45deg, #00b894, #00cec9); }
+    .main-4 { bottom: 120px; left: 600px; background: linear-gradient(45deg, #fdcb6e, #e17055); }
+    .main-5 { bottom: 200px; left: 150px; background: linear-gradient(45deg, #a29bfe, #6c5ce7); }
+    .main-6 { top: 200px; left: 150px; background: linear-gradient(45deg, #fd79a8, #fdcb6e); }
 
-        .branch-2 {
-            top: 35%;
-            right: 15%;
-            transform: rotate(30deg);
-        }
+    /* Posiciones de los sub-nodos */
+    /* Rama 1: Presupuestos Operativos */
+    .sub-1-1 { top: 50px; left: 520px; }
+    .sub-1-2 { top: 50px; left: 680px; }
+    .sub-1-3 { top: 50px; left: 840px; }
 
-        .branch-3 {
-            bottom: 35%;
-            right: 15%;
-            transform: rotate(-30deg);
-        }
+    /* Rama 2: Presupuestos Financieros */
+    .sub-2-1 { top: 130px; right: 80px; }
+    .sub-2-2 { top: 130px; right: 240px; }
+    .sub-2-3 { top: 280px; right: 80px; }
 
-        .branch-4 {
-            bottom: 20%;
-            left: 60%;
-            transform: rotate(30deg);
-        }
+    /* Rama 3: Características */
+    .sub-3-1 { bottom: 130px; right: 80px; }
+    .sub-3-2 { bottom: 130px; right: 240px; }
+    .sub-3-3 { bottom: 280px; right: 80px; }
 
-        .branch-5 {
-            bottom: 20%;
-            left: 15%;
-            transform: rotate(-30deg);
-        }
+    /* Rama 4: Objetivos */
+    .sub-4-1 { bottom: 50px; left: 520px; }
+    .sub-4-2 { bottom: 50px; left: 680px; }
+    .sub-4-3 { bottom: 50px; left: 840px; }
 
-        .branch-6 {
-            top: 20%;
-            left: 15%;
-            transform: rotate(30deg);
-        }
+    /* Rama 5: Proceso */
+    .sub-5-1 { bottom: 130px; left: 80px; }
+    .sub-5-2 { bottom: 130px; left: 240px; }
+    .sub-5-3 { bottom: 280px; left: 80px; }
 
-        .branch-line-1 { width: 150px; background: #e74c3c; }
-        .branch-line-2 { width: 120px; background: #3498db; }
-        .branch-line-3 { width: 140px; background: #2ecc71; }
-        .branch-line-4 { width: 130px; background: #f39c12; }
-        .branch-line-5 { width: 160px; background: #9b59b6; }
-        .branch-line-6 { width: 140px; background: #1abc9c; }
+    /* Rama 6: Beneficios */
+    .sub-6-1 { top: 130px; left: 80px; }
+    .sub-6-2 { top: 130px; left: 240px; }
+    .sub-6-3 { top: 280px; left: 80px; }
 
-        .node-1 { background: linear-gradient(45deg, #ff7675, #fd79a8); color: white; }
-        .node-2 { background: linear-gradient(45deg, #74b9ff, #0984e3); color: white; }
-        .node-3 { background: linear-gradient(45deg, #00b894, #00cec9); color: white; }
-        .node-4 { background: linear-gradient(45deg, #fdcb6e, #e17055); color: white; }
-        .node-5 { background: linear-gradient(45deg, #a29bfe, #6c5ce7); color: white; }
-        .node-6 { background: linear-gradient(45deg, #fd79a8, #fdcb6e); color: white; }
+    @media (max-width: 1200px) {
+      .mind-map {
+        transform: scale(0.8);
+      }
+    }
 
-        .sub-nodes {
-            position: absolute;
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-        }
+    @media (max-width: 768px) {
+      .mind-map {
+        transform: scale(0.6);
+      }
 
-        .sub-node {
-            background: rgba(255,255,255,0.9);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 10px;
-            color: #2c3e50;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+      .title {
+        font-size: 28px;
+      }
 
-        .sub-node:hover {
-            background: white;
-            transform: scale(1.05);
-        }
-
-        .title {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            color: white;
-            font-size: 12px;
-            background: rgba(0,0,0,0.3);
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @media (max-width: 768px) {
-            .central-node {
-                width: 150px;
-                height: 150px;
-                font-size: 14px;
-            }
-            
-            .node {
-                max-width: 150px;
-                padding: 10px 15px;
-            }
-            
-            .title {
-                font-size: 20px;
-            }
-        }
-    </style>
+      .author {
+        font-size: 18px;
+        padding: 10px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="title">PRESUPUESTO MAESTRO</div>
-    
-    <div class="mind-map">
-        <div class="central-node pulse">
-            PRESUPUESTO<br>MAESTRO
-        </div>
-
-        <!-- Rama 1: Presupuestos Operativos -->
-        <div class="branch branch-1">
-            <div class="branch-line branch-line-1"></div>
-            <div class="node node-1" onclick="toggleSubNodes('sub1')">
-                <h3>Presupuestos Operativos</h3>
-                <p>Actividades principales del negocio</p>
-            </div>
-            <div class="sub-nodes" id="sub1" style="left: 220px; top: -50px;">
-                <div class="sub-node">Presupuesto de Ventas</div>
-                <div class="sub-node">Presupuesto de Producción</div>
-                <div class="sub-node">Presupuesto de Compras</div>
-                <div class="sub-node">Presupuesto de Gastos Operativos</div>
-            </div>
-        </div>
-
-        <!-- Rama 2: Presupuestos Financieros -->
-        <div class="branch branch-2">
-            <div class="branch-line branch-line-2"></div>
-            <div class="node node-2" onclick="toggleSubNodes('sub2')">
-                <h3>Presupuestos Financieros</h3>
-                <p>Estados financieros proyectados</p>
-            </div>
-            <div class="sub-nodes" id="sub2" style="left: 140px; top: -40px;">
-                <div class="sub-node">Flujo de Efectivo</div>
-                <div class="sub-node">Estado de Resultados</div>
-                <div class="sub-node">Balance General</div>
-            </div>
-        </div>
-
-        <!-- Rama 3: Características -->
-        <div class="branch branch-3">
-            <div class="branch-line branch-line-3"></div>
-            <div class="node node-3" onclick="toggleSubNodes('sub3')">
-                <h3>Características</h3>
-                <p>Propiedades del presupuesto maestro</p>
-            </div>
-            <div class="sub-nodes" id="sub3" style="left: 160px; top: -60px;">
-                <div class="sub-node">Integral y Coordinado</div>
-                <div class="sub-node">Período Específico</div>
-                <div class="sub-node">Cuantificado</div>
-                <div class="sub-node">Flexible</div>
-            </div>
-        </div>
-
-        <!-- Rama 4: Objetivos -->
-        <div class="branch branch-4">
-            <div class="branch-line branch-line-4"></div>
-            <div class="node node-4" onclick="toggleSubNodes('sub4')">
-                <h3>Objetivos</h3>
-                <p>Propósitos del presupuesto</p>
-            </div>
-            <div class="sub-nodes" id="sub4" style="right: 150px; top: -50px;">
-                <div class="sub-node">Planificación</div>
-                <div class="sub-node">Control</div>
-                <div class="sub-node">Coordinación</div>
-                <div class="sub-node">Evaluación</div>
-            </div>
-        </div>
-
-        <!-- Rama 5: Proceso de Elaboración -->
-        <div class="branch branch-5">
-            <div class="branch-line branch-line-5"></div>
-            <div class="node node-5" onclick="toggleSubNodes('sub5')">
-                <h3>Proceso de Elaboración</h3>
-                <p>Pasos para crear el presupuesto</p>
-            </div>
-            <div class="sub-nodes" id="sub5" style="right: 180px; top: -60px;">
-                <div class="sub-node">Análisis del Entorno</div>
-                <div class="sub-node">Definición de Objetivos</div>
-                <div class="sub-node">Proyección de Ventas</div>
-                <div class="sub-node">Integración Final</div>
-            </div>
-        </div>
-
-        <!-- Rama 6: Beneficios -->
-        <div class="branch branch-6">
-            <div class="branch-line branch-line-6"></div>
-            <div class="node node-6" onclick="toggleSubNodes('sub6')">
-                <h3>Beneficios</h3>
-                <p>Ventajas de implementarlo</p>
-            </div>
-            <div class="sub-nodes" id="sub6" style="right: 160px; top: -50px;">
-                <div class="sub-node">Mejor Toma de Decisiones</div>
-                <div class="sub-node">Control de Recursos</div>
-                <div class="sub-node">Detección de Desviaciones</div>
-                <div class="sub-node">Comunicación Organizacional</div>
-            </div>
-        </div>
+  <div class="mind-map">
+    <div class="header">
+      <div class="title">PRESUPUESTO MAESTRO</div>
+      <div class="author">Noe Escandón de la Cruz</div>
     </div>
 
-    <div class="legend">
-        <strong>Instrucciones:</strong><br>
-        • Haz clic en los nodos para ver más detalles<br>
-        • Pasa el cursor sobre los elementos para interactuar<br>
-        • El mapa es completamente interactivo
-    </div>
+    <!-- Líneas SVG entre el nodo central y los principales -->
+    <svg class="svg-lines">
+      <!-- Líneas principales desde el centro -->
+      <line x1="700" y1="500" x2="700" y2="120" stroke="#e74c3c" stroke-width="4" />
+      <line x1="700" y1="500" x2="1250" y2="220" stroke="#3498db" stroke-width="4" />
+      <line x1="700" y1="500" x2="1250" y2="800" stroke="#2ecc71" stroke-width="4" />
+      <line x1="700" y1="500" x2="700" y2="880" stroke="#f39c12" stroke-width="4" />
+      <line x1="700" y1="500" x2="150" y2="800" stroke="#9b59b6" stroke-width="4" />
+      <line x1="700" y1="500" x2="150" y2="220" stroke="#1abc9c" stroke-width="4" />
+      
+      <!-- Líneas desde nodo 1 a sus sub-nodos -->
+      <line x1="700" y1="120" x2="590" y2="70" stroke="#e74c3c" stroke-width="2" />
+      <line x1="700" y1="120" x2="750" y2="70" stroke="#e74c3c" stroke-width="2" />
+      <line x1="700" y1="120" x2="910" y2="70" stroke="#e74c3c" stroke-width="2" />
+      
+      <!-- Líneas desde nodo 2 a sus sub-nodos -->
+      <line x1="1250" y1="220" x2="1320" y2="150" stroke="#3498db" stroke-width="2" />
+      <line x1="1250" y1="220" x2="1160" y2="150" stroke="#3498db" stroke-width="2" />
+      <line x1="1250" y1="220" x2="1320" y2="300" stroke="#3498db" stroke-width="2" />
+      
+      <!-- Líneas desde nodo 3 a sus sub-nodos -->
+      <line x1="1250" y1="800" x2="1320" y2="870" stroke="#2ecc71" stroke-width="2" />
+      <line x1="1250" y1="800" x2="1160" y2="870" stroke="#2ecc71" stroke-width="2" />
+      <line x1="1250" y1="800" x2="1320" y2="720" stroke="#2ecc71" stroke-width="2" />
+      
+      <!-- Líneas desde nodo 4 a sus sub-nodos -->
+      <line x1="700" y1="880" x2="590" y2="930" stroke="#f39c12" stroke-width="2" />
+      <line x1="700" y1="880" x2="750" y2="930" stroke="#f39c12" stroke-width="2" />
+      <line x1="700" y1="880" x2="910" y2="930" stroke="#f39c12" stroke-width="2" />
+      
+      <!-- Líneas desde nodo 5 a sus sub-nodos -->
+      <line x1="150" y1="800" x2="80" y2="870" stroke="#9b59b6" stroke-width="2" />
+      <line x1="150" y1="800" x2="240" y2="870" stroke="#9b59b6" stroke-width="2" />
+      <line x1="150" y1="800" x2="80" y2="720" stroke="#9b59b6" stroke-width="2" />
+      
+      <!-- Líneas desde nodo 6 a sus sub-nodos -->
+      <line x1="150" y1="220" x2="80" y2="150" stroke="#1abc9c" stroke-width="2" />
+      <line x1="150" y1="220" x2="240" y2="150" stroke="#1abc9c" stroke-width="2" />
+      <line x1="150" y1="220" x2="80" y2="300" stroke="#1abc9c" stroke-width="2" />
+    </svg>
 
-    <script>
-        function toggleSubNodes(id) {
-            const subNodes = document.getElementById(id);
-            const allSubNodes = document.querySelectorAll('.sub-nodes');
-            
-            // Ocultar todos los otros sub-nodos
-            allSubNodes.forEach(node => {
-                if (node.id !== id) {
-                    node.style.display = 'none';
-                }
-            });
-            
-            // Toggle el sub-nodo clickeado
-            if (subNodes.style.display === 'flex') {
-                subNodes.style.display = 'none';
-            } else {
-                subNodes.style.display = 'flex';
-            }
-        }
+    <div class="central-node">PRESUPUESTO<br>MAESTRO</div>
 
-        // Agregar efectos de hover adicionales
-        document.querySelectorAll('.node').forEach(node => {
-            node.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px) scale(1.05)';
-            });
-            
-            node.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
+    <!-- Nodos principales -->
+    <div class="main-node main-1">Presupuestos<br>Operativos</div>
+    <div class="main-node main-2">Presupuestos<br>Financieros</div>
+    <div class="main-node main-3">Características</div>
+    <div class="main-node main-4">Objetivos</div>
+    <div class="main-node main-5">Proceso de<br>Elaboración</div>
+    <div class="main-node main-6">Beneficios</div>
 
-        // Efecto de rotación suave para el nodo central
-        const centralNode = document.querySelector('.central-node');
-        let rotation = 0;
-        
-        setInterval(() => {
-            rotation += 0.5;
-            centralNode.style.transform = `scale(1) rotate(${rotation}deg)`;
-        }, 100);
+    <!-- Sub-nodos para cada rama -->
+    <!-- Rama 1: Presupuestos Operativos -->
+    <div class="sub-node sub-1-1">Presupuesto<br>de Ventas</div>
+    <div class="sub-node sub-1-2">Presupuesto<br>de Producción</div>
+    <div class="sub-node sub-1-3">Presupuesto<br>de Compras</div>
 
-        // Cerrar sub-nodos al hacer clic fuera
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.node') && !e.target.closest('.sub-nodes')) {
-                document.querySelectorAll('.sub-nodes').forEach(node => {
-                    node.style.display = 'none';
-                });
-            }
-        });
-    </script>
+    <!-- Rama 2: Presupuestos Financieros -->
+    <div class="sub-node sub-2-1">Flujo de<br>Efectivo</div>
+    <div class="sub-node sub-2-2">Estado de<br>Resultados</div>
+    <div class="sub-node sub-2-3">Balance<br>General</div>
+
+    <!-- Rama 3: Características -->
+    <div class="sub-node sub-3-1">Integral y<br>Coordinado</div>
+    <div class="sub-node sub-3-2">Período<br>Específico</div>
+    <div class="sub-node sub-3-3">Cuantificado</div>
+
+    <!-- Rama 4: Objetivos -->
+    <div class="sub-node sub-4-1">Planificación</div>
+    <div class="sub-node sub-4-2">Control</div>
+    <div class="sub-node sub-4-3">Coordinación</div>
+
+    <!-- Rama 5: Proceso -->
+    <div class="sub-node sub-5-1">Análisis del<br>Entorno</div>
+    <div class="sub-node sub-5-2">Definición de<br>Objetivos</div>
+    <div class="sub-node sub-5-3">Proyección<br>de Ventas</div>
+
+    <!-- Rama 6: Beneficios -->
+    <div class="sub-node sub-6-1">Mejor Toma<br>de Decisiones</div>
+    <div class="sub-node sub-6-2">Control de<br>Recursos</div>
+    <div class="sub-node sub-6-3">Comunicación<br>Organizacional</div>
+  </div>
 </body>
 </html>
